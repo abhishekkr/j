@@ -1,6 +1,6 @@
-/* minimal which I mostly require; so gotta go jq */
+/* $ minimal which I mostly require; so gotta go jq */
 
-/* just a css selector */
+/* $DOM: just a css selector */
 function $DOM(elementHint, elementIndex){
   /* // in case non-css selector gets required 
   var first_char = elementHint.match(/^./)[0];
@@ -11,9 +11,4 @@ function $DOM(elementHint, elementIndex){
     elementIndex = 0;
   }
 	return str_nodes[elementIndex];
-}
-
-/* trim strings l-r spaces */
-function trim(str){
-  return str.replace(/(^\s+|\s+$)/g, '')
 }
