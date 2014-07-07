@@ -1,3 +1,5 @@
+// testing ../j.js
+
 function TestDOMWithoutIndex(elementHint, expectedValue){
 	var resultValue;
 	resultValue = trim($DOM(elementHint).innerHTML);
