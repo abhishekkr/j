@@ -1,6 +1,13 @@
 /*Customizer*/
 var minified = "";
 
+var j_map = {
+				"./j.min.js": "DOM",
+				"./j_text.min.js": "Text",
+				"./j_file.min.js": "XHR",
+				"./j_timepiece.min.js": "Time"
+			}
+
 function jlibUpdate(jlib){
 	j = loadURI(jlib.value);
 	if (jlib.checked) {
