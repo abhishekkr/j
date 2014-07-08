@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+	<title>Customiz your required j-lib</title>
+	<link rel="stylesheet" href="./customize.css">
+	<script type="text/javascript" src="./customize.js"></script>
+	<script type="text/javascript" src="./j.min.js"></script>
+	<script type="text/javascript" src="./j_file.min.js"></script>
+</head>
+<body>
+<h3>Customiz your J-LIB</h3>
+<div id="main">
+	<div id="jlibOptions">
+		<span><input type="checkbox" name="jlib" value="./j.min.js" onClick="jlibUpdate(this);">DOM</input></span>
+		<span><input type="checkbox" name="jlib" value="./j_text.min.js" onClick="jlibUpdate(this);">Text</input></span>
+		<span><input type="checkbox" name="jlib" value="./j_file.min.js" onClick="jlibUpdate(this);">XHR</input></span>
+		<span><input type="checkbox" name="jlib" value="./j_timepiece.min.js" onClick="jlibUpdate(this);">Time</input></span>
+	</div>
+
+	<div id="jlibMinified">
+		<textarea></textarea>
+	</div>
+</div>
+</body>
+</html>
