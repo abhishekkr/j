@@ -5,7 +5,7 @@ j
 
 reducing javascript lib to minimal structure mostly needed not heavyweight contenders
 
-#### Available Grains
+#### Available Grains of salt, just use enough to get required taste
 
 * $DOM : css selector
 * trim : trim end spaces of text
