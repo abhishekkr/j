@@ -36,11 +36,11 @@ var INIRegex = {
 
 /* populate value depending on trueParam or not */
 function populateValueWithToken(INI, key, val){
-  if(section){
+  if(INI.hasOwnProperty("section")){
     if(INI.hasOwnProperty("trueParam")){
-      INI.value[section][INI.trueParam][key] = val;
+      INI.value[INI.section][INI.trueParam][key] = val;
     } else{
-      INI.value[section][key] = val;
+      INI.value[INI.section][key] = val;
     }
 
   }else{
@@ -56,17 +56,17 @@ function populateValueWithToken(INI, key, val){
 /* parse token from line in INI */
 function parseINIToken(INI, token){
   if(INIRegex.trueParam.test(token)){
-    //console.log("trueParam:", token, ", under:", section);
+    //console.log("trueParam:", token, ", under:", INI.section);
     var match = token.match(INIRegex.trueParam);
-    if(section){
-      INI.value[section][match[1]] = {};
+    if(INI.hasOwnProperty("section")){
+      INI.value[INI.section][match[1]] = {};
     }else{
       INI.value[match[1]] = {};
     }
     INI.trueParam = match[1];
 
   }else if(INIRegex.param.test(token)){
-    //console.log("param:", token, ", under:", section);
+    //console.log("param:", token, ", under:", INI.section);
     var match = token.match(INIRegex.param);
     populateValueWithToken(INI, match[1], match[2])
   }
@@ -82,16 +82,16 @@ function parseINILine(INI, line){
     //console.log("section:", line);
     var match = line.match(INIRegex.section);
     INI.value[match[1]] = {};
-    section = match[1];
+    INI.section = match[1];
 
-  }else if(line.length == 0 && section){
-    //console.log("section-null:", line);
-    section = null;
+  }else if(line.length == 0 && INI.hasOwnProperty("section")){
+    //console.log("~ section-null");
+    delete INI.section;
 
   }else {
-    tokens = line.split(/\s+/)
-    for(token_idx=0; token_idx<tokens.length; token_idx++){
-      parseINIToken(INI, tokens[token_idx])
+    var tokens = line.split(/\s+/);
+    for(var token_idx in tokens){
+      parseINIToken(INI, tokens[token_idx]);
     }
     delete INI.trueParam;
   };
@@ -101,12 +101,26 @@ function parseINILine(INI, line){
 function parseINI(data){
   var INI = {value: {}};
   var lines = data.split(/\r\n|\r|\n/);
-  var section = null;
 
-  for(line_idx=0; line_idx<lines.length; line_idx++){
-    parseINILine(INI, lines[line_idx])
+  for(var line_idx in lines){
+    parseINILine(INI, lines[line_idx]);
   }
-
   return INI.value;
+}
+
+function updateINIParents(INI, section_name){
+  for(var _section in INI.value){
+    if(section_name == _section) continue;
+    if(Object.keys(INI.value[_section]).indexOf(section_name) < 0) continue;
+    INI.value[_section][section_name] = (INI.value[section_name]);
+  }
+}
+
+function parseINIHiera(data){
+  var INI = {value: parseINI(data)};
+	for(var _section in INI.value){
+    updateINIParents(INI, _section);
+	}
+	return INI.value;
 }
 
