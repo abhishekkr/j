@@ -56,7 +56,6 @@ function populateValueWithToken(INI, key, val){
 /* parse token from line in INI */
 function parseINIToken(INI, token){
   if(INIRegex.trueParam.test(token)){
-    //console.log("trueParam:", token, ", under:", INI.section);
     var match = token.match(INIRegex.trueParam);
     if(INI.hasOwnProperty("section")){
       INI.value[INI.section][match[1]] = {};
@@ -66,7 +65,6 @@ function parseINIToken(INI, token){
     INI.trueParam = match[1];
 
   }else if(INIRegex.param.test(token)){
-    //console.log("param:", token, ", under:", INI.section);
     var match = token.match(INIRegex.param);
     populateValueWithToken(INI, match[1], match[2])
   }
@@ -75,17 +73,14 @@ function parseINIToken(INI, token){
 /* parse line from INI */
 function parseINILine(INI, line){
   if(INIRegex.comment.test(line)){
-    //console.log("comment:", line);
     return;
 
   }else if(INIRegex.section.test(line)){
-    //console.log("section:", line);
     var match = line.match(INIRegex.section);
     INI.value[match[1]] = {};
     INI.section = match[1];
 
   }else if(line.length == 0 && INI.hasOwnProperty("section")){
-    //console.log("~ section-null");
     delete INI.section;
 
   }else {
@@ -108,14 +103,30 @@ function parseINI(data){
   return INI.value;
 }
 
+/* for parseINIhiera, updateINIParents call updateINIChildren to propagate extra attributes */
+function updateINIChildren(INI, parent_section, child_section){
+    for(var defaultChild in INI.value[parent_section][child_section]){
+      if(INI.value[child_section].hasOwnProperty(defaultChild)) continue;
+      INI.value[child_section][defaultChild] = INI.value[parent_section][child_section][defaultChild]
+    }
+}
+
+/* update parseINI output to map child section under parent section */
 function updateINIParents(INI, section_name){
   for(var _section in INI.value){
     if(section_name == _section) continue;
+
+    if(typeof(INI.value[_section]) == 'string') continue;
+
     if(Object.keys(INI.value[_section]).indexOf(section_name) < 0) continue;
+
+    updateINIChildren(INI, _section, section_name)
+
     INI.value[_section][section_name] = (INI.value[section_name]);
   }
 }
 
+/* parse INI data with parent section having info about child section */
 function parseINIHiera(data){
   var INI = {value: parseINI(data)};
 	for(var _section in INI.value){
