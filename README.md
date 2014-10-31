@@ -12,6 +12,6 @@ reducing javascript lib to minimal structure mostly needed not heavyweight conte
 * loadURI : returns responseText for XHR of URI
 * delay : delay for given milliseconds
 * parseINI : parse an INI Configuration text
-* parseINIhiera : parseINI method with hierarchical inference capability for ParentSections grouping ChildSections
+* parseINIHiera : parseINI method with hierarchical inference capability for ParentSections grouping ChildSections
 
 #### collect your required set of [minifed j here](http://abhishekkr.github.io/j/minified/customize.html)
