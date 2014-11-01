@@ -105,9 +105,13 @@ function parseINI(data){
 
 /* for parseINIhiera, updateINIParents call updateINIChildren to propagate extra attributes */
 function updateINIChildren(INI, parent_section, child_section){
-    for(var defaultChild in INI.value[parent_section][child_section]){
-      if(INI.value[child_section].hasOwnProperty(defaultChild)) continue;
-      INI.value[child_section][defaultChild] = INI.value[parent_section][child_section][defaultChild]
+    for(var defaultChildAttrib in INI.value[parent_section][child_section]){
+      if(INI.value[child_section].hasOwnProperty(defaultChildAttrib)) continue;
+      _default_child_attrib = INI.value[parent_section][child_section][defaultChildAttrib]
+
+      for(var _child in INI.value[child_section]){
+        INI.value[child_section][_child][defaultChildAttrib] = _default_child_attrib
+      }
     }
 }
 
