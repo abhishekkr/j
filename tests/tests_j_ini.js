@@ -112,3 +112,35 @@ var ini_data06_hiera = {
   }
 };
 TestParseINIHiera(ini_data06, ini_data06_hiera, ini_data06_notresult);
+
+var ini_data07_likeanisble = "[app]\nxyz.apps.com uuid=jd\nabc.apps.com\n\n[db]\nabc.db.com ansible_user=dbanu\nxyz.db.com\n\n\n\n[dev]\napp ansible_user=dev01 ansible_connection=ssh\ndb ansible_user=dbaold";
+var ini_data07_notresult = {"firstname":"john"};
+var ini_data07_hiera = {
+  "app":
+    {
+      "xyz.apps.com": {
+        "uuid": "jd", "ansible_user": "dev01", "ansible_connection": "ssh"
+      },
+      "abc.apps.com": { "ansible_user": "dev01", "ansible_connection": "ssh" }
+    },
+  "db":
+    {
+      "abc.db.com": { "ansible_user": "dbanu" },
+      "xyz.db.com": { "ansible_user": "dbaold" }
+    },
+  "dev": {
+    "app":
+      {
+        "xyz.apps.com": {
+          "uuid": "jd", "ansible_user": "dev01", "ansible_connection": "ssh"
+        },
+        "abc.apps.com": { "ansible_user": "dev01", "ansible_connection": "ssh" }
+      },
+    "db":
+      {
+        "abc.db.com": { "ansible_user": "dbanu" },
+        "xyz.db.com": { "ansible_user": "dbaold" }
+      }
+  }
+};
+TestParseINIHiera(ini_data07_likeanisble, ini_data07_hiera, ini_data07_notresult);
