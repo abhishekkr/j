@@ -2,28 +2,11 @@
 /*
  * parseINI(string_from_INI_Config_file)
  * returns a dictionary with all non-section elements,  Sectio as elements with value of dictionary of it's elements
- * Sample Usage:
- *   var iniData = "[some]\nthing  ansible_ssh_user=user01\nvars ansible_connection=local ansible_ssh_user=user01\n\n[ome]\nabc=ABC\n\nm=e";
- *   var ini = parseINI(iniData);
- *   console.log(ini);
- * would give something like:
- *   {
- *     "some": {
- *       "thing": {
- *         "ansible_ssh_user": "user01"
- *       },
- *       "vars": {
- *         "ansible_connection": "local",
- *         "ansible_ssh_user": "user01"
- *       }
- *     },
  *
- *     "ome": {
- *       "abc": "ABC"
- *     },
+ * parseINIHiera(string_from_INI_Config_file)
+ * does parseINI, then propagates all parent section attribs to child and inject all child sections to parent
  *
- *     "m": "e"
- *   }
+ * For sample usage refer: tests/tests_j_ini.js
 */
 
 /* regex for INI tokens */
@@ -36,21 +19,15 @@ var INIRegex = {
 
 /* populate value depending on trueParam or not */
 function populateValueWithToken(INI, key, val){
+  var _obj = Object;
+  _obj = INI.value;
   if(INI.hasOwnProperty("section")){
-    if(INI.hasOwnProperty("trueParam")){
-      INI.value[INI.section][INI.trueParam][key] = val;
-    } else{
-      INI.value[INI.section][key] = val;
-    }
-
-  }else{
-    if(INI.hasOwnProperty("trueParam")){
-      INI.value[INI.trueParam][key] = val;
-    } else{
-      INI.value[key] = val;
-    }
-
+    _obj = _obj[INI.section];
   }
+  if(INI.hasOwnProperty("trueParam")){
+    _obj = _obj[INI.trueParam];
+  }
+  _obj[key] = val;
 }
 
 /* parse token from line in INI */
@@ -110,6 +87,7 @@ function updateINIChildren(INI, parent_section, child_section){
       _default_child_attrib = INI.value[parent_section][child_section][defaultChildAttrib]
 
       for(var _child in INI.value[child_section]){
+        if(INI.value[child_section][_child].hasOwnProperty(defaultChildAttrib)) continue;
         INI.value[child_section][_child][defaultChildAttrib] = _default_child_attrib
       }
     }
