@@ -5,8 +5,7 @@ function loadURI(href){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", href, false);
     xmlhttp.send();
-    return xmlhttp.responseText;
-}status / 100);
+    var stateX = parseInt(xmlhttp.status / 100);
     if(stateX == 4 || stateX == 5){
       return "";
     }
