@@ -6,7 +6,8 @@ var j_map = {
 				"./j_text.min.js": "Text",
 				"./j_file.min.js": "XHR",
 				"./j_timepiece.min.js": "Time",
-				"./j_ini.min.js": "INI Config Deserializer"
+				"./j_ini.min.js": "INI Config Deserializer",
+				"./j_httpget.min.js": "HTTPGet Key:Val params"
 			}
 
 function jlibUpdate(jlib){
